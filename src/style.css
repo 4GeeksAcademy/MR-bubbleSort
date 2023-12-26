@@ -1,1 +1,55 @@
-@import "~bootstrap/dist/css/bootstrap.min.css";
+body {
+    background-color: rgb(77, 189, 77);
+  }
+  .container-random-cards, .sorted-cards{
+    display: flex;
+  }
+  
+  .card {
+    display: flex;
+    flex-direction: column;
+    margin: 3px;
+    min-height: 200px;
+    min-width: 140px;
+    background-color: white;
+    border: 5px;
+    border-color: black;
+    border-radius: 7px;
+    padding: 10px;
+    position: relative;
+  }
+  .top-corner {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 50px;
+  }
+  .bottom-corner {
+    position: absolute;
+    bottom: 15px;
+    right: 20px;
+    font-size: 50px;
+  }
+  
+  .card-number {
+    margin: auto;
+    font-size: 50px;
+  }
+  & .spade:after {
+    content: "\2660";
+  }
+  
+  .club:after {
+    content: "\2663";
+  }
+  
+  .diamond:after {
+    content: "\2666";
+    color: red;
+  }
+  
+  .heart:after {
+    content: "\2665";
+    color: red;
+  }
+  
