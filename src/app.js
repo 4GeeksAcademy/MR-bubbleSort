@@ -1,22 +1,29 @@
-const cards = document.querySelectorAll(".card");
-const cardAmount = document.querySelector("form");
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.querySelector("form");
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const x = parseInt(document.getElementById("amount").value, 10);
 
+    if (isNaN(x) || x < 1 || x > 10) {
+      alert("Please insert a number between 1 and 10");
+      return;
+    }
 
-cards.forEach(card => {
-    let topcorner = card.querySelector(".top-corner");
-    let bottomcorner = card.querySelector(".bottom-corner");
-    let cardnumber = card.querySelector(".card-number");
-
-    let selectedpinta = RandomPintaGenerator();
-
-    topcorner.classList.remove(topcorner.classList.item(1));
-    topcorner.classList.add(selectedpinta);
-    bottomcorner.classList.remove(bottomcorner.classList.item(1));
-    bottomcorner.classList.add(selectedpinta);
-    cardnumber.innerHTML = RandomNumberGenerator();
+    const cardContainer = document.querySelector(".container-random-cards");
+    cardContainer.innerHTML = "";
+    for (let i = 0; i < x; i++) {
+      cardContainer.appendChild(createCard());
+    }
   });
 
-let RandomNumberGenerator = () => {
+  const sortButton = document.querySelector("#sort");
+  sortButton.addEventListener("click", () => {
+    document.querySelector(".sorted-cards").innerHTML = "";
+    bubbleSort();
+  });
+});
+
+function RandomNumberGenerator() {
   const possiblenumberpicks = [
     "A",
     "2",
@@ -30,18 +37,17 @@ let RandomNumberGenerator = () => {
     "10",
     "J",
     "Q",
-    "K"
+    "K",
   ];
-  const numbertopick = Math.floor(Math.random() * possiblenumberpicks.length);
-  return possiblenumberpicks[numbertopick];
-};
+  return possiblenumberpicks[
+    Math.floor(Math.random() * possiblenumberpicks.length)
+  ];
+}
 
-let RandomPintaGenerator = () => {
+function RandomPintaGenerator() {
   const pinta = ["heart", "diamond", "club", "spade"];
-  const pintatopick = Math.floor(Math.random() * pinta.length);
-  return pinta[pintatopick];
-};
-
+  return pinta[Math.floor(Math.random() * pinta.length)];
+}
 
 function createCard() {
   const card = document.createElement("div");
@@ -69,48 +75,70 @@ function createCard() {
   return card;
 }
 
-
-
-const form = document.querySelector("form");
-form.addEventListener("submit", event => {
-  event.preventDefault();
-  const x = parseInt(document.getElementById("amount").value, 10); 
-
-  if (isNaN(x) || x < 1 || x > 10) {
-    alert("Please insert a number between 1 and 10");
-    return;
-  }
-
-  const cardContainer = document.querySelector(".container-random-cards");
-  cardContainer.innerHTML = '';
-  for (let i = 0; i < x; i++) {
-    cardContainer.appendChild(createCard());
-  }
-});
-
 function getCardValue(cardValue) {
-  const values = { "A": 1, "2": 2, "3": 3, "4": 4, "5": 5, "6": 6, "7": 7, "8": 8, "9": 9, "10": 10, "J": 11, "Q": 12, "K": 13 };
-  
+  const values = {
+    A: 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+    "10": 10,
+    J: 11,
+    Q: 12,
+    K: 13,
+  };
   return values[cardValue];
 }
-function selectionSort() {
-  const cards = document.querySelectorAll(".container-random-cards .card");
-  const cardsArr = Array.from(cards).map(card => card.cloneNode(true));
 
-  for (let i = 0; i < cardsArr.length; i++) {
-    let minIndex = i;
-    for (let j = i + 1; j < cardsArr.length; j++) {
-      if (parseInt(cardsArr[j].dataset.value) < parseInt(cardsArr[minIndex].dataset.value)) {
-        minIndex = j;
+function bubbleSort() {
+  const cards = document.querySelectorAll(".container-random-cards .card");
+  let cardsArr = Array.from(cards);
+  let isSorted = false;
+  let lastUnsorted = cardsArr.length - 1;
+  let iteration = 1;
+
+  let sortedCardsContainer = document.querySelector(".sorted-cards");
+  sortedCardsContainer.innerHTML = "";
+
+  while (!isSorted) {
+    isSorted = true;
+
+    for (let i = 0; i < lastUnsorted; i++) {
+      if (
+        parseInt(cardsArr[i].dataset.value) >
+        parseInt(cardsArr[i + 1].dataset.value)
+      ) {
+        [cardsArr[i], cardsArr[i + 1]] = [cardsArr[i + 1], cardsArr[i]];
+        isSorted = false;
       }
     }
-    if (minIndex !== i) {
-      [cardsArr[i], cardsArr[minIndex]] = [cardsArr[minIndex], cardsArr[i]];
-    }
+
+    displayIteration(cardsArr, iteration);
+
+    iteration++;
+    lastUnsorted--;
   }
-  const sortedCardContainer = document.querySelector(".sorted-cards");
-  sortedCardContainer.innerHTML = '';
-  cardsArr.forEach(card => sortedCardContainer.appendChild(card));
 }
-const sortButton = document.querySelector("#sort"); 
-sortButton.addEventListener("click", selectionSort);
+
+function displayIteration(cardsArr, iteration) {
+  const iterationContainer = document.createElement("div");
+  iterationContainer.classList.add("iteration");
+  iterationContainer.innerHTML = `<h3>Iteración ${iteration}</h3>`;
+  const iterationCardsContainer = document.createElement("div");
+  iterationCardsContainer.classList.add("card-container");
+
+  cardsArr.forEach((card) => {
+    const cardClone = card.cloneNode(true);
+    iterationCardsContainer.appendChild(cardClone);
+  });
+
+  iterationContainer.appendChild(iterationCardsContainer);
+  document.querySelector(".sorted-cards").appendChild(iterationContainer);
+}
+
+const sortButton = document.querySelector("#sort");
+sortButton.addEventListener("click", bubbleSort);
