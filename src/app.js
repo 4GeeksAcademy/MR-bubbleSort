@@ -1,6 +1,8 @@
+import "bootstrap";
+import "./style.css";
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.querySelector("form");
-  form.addEventListener("submit", (event) => {
+  form.addEventListener("submit", event => {
     event.preventDefault();
     const x = parseInt(document.getElementById("amount").value, 10);
 
@@ -37,7 +39,7 @@ function RandomNumberGenerator() {
     "10",
     "J",
     "Q",
-    "K",
+    "K"
   ];
   return possiblenumberpicks[
     Math.floor(Math.random() * possiblenumberpicks.length)
@@ -89,7 +91,7 @@ function getCardValue(cardValue) {
     "10": 10,
     J: 11,
     Q: 12,
-    K: 13,
+    K: 13
   };
   return values[cardValue];
 }
@@ -131,7 +133,7 @@ function displayIteration(cardsArr, iteration) {
   const iterationCardsContainer = document.createElement("div");
   iterationCardsContainer.classList.add("card-container");
 
-  cardsArr.forEach((card) => {
+  cardsArr.forEach(card => {
     const cardClone = card.cloneNode(true);
     iterationCardsContainer.appendChild(cardClone);
   });
